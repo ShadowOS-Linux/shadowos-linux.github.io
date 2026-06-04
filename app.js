@@ -1,26 +1,18 @@
-// Global runtime state tracking - Clean start with no hardcoded fallback info
 const runtimeState = {
     de: null,
     gpu: null,
     steam: null,
     liveData: {
         runId: null,
-        fedoraVersion: null,
-        timestamp: null
+        resolvedLinks: {}
     }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Immediately bind button click events so the UI works no matter what
     initializeUIEventListeners();
-
-    // 2. Fetch run configuration identifiers in the background
-    fetchLatestWorkflowData();
+    fetchLiveNightlyIndex();
 });
 
-/**
- * Intercepts event loops and assigns variables dynamically to our active schema.
- */
 function initializeUIEventListeners() {
     document.querySelectorAll('.grid button').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -29,11 +21,9 @@ function initializeUIEventListeners() {
             const matrixStep = parentGrid.getAttribute('data-step');
             const elementValue = currentButton.getAttribute('data-value');
 
-            // Toggle visual state indicators within the step group
             parentGrid.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
             currentButton.classList.add('active');
 
-            // Apply selected parameter configurations to state machine
             if (matrixStep === 'de') runtimeState.de = elementValue;
             if (matrixStep === 'gpu') runtimeState.gpu = elementValue;
             if (matrixStep === 'steam') runtimeState.steam = elementValue;
@@ -44,65 +34,70 @@ function initializeUIEventListeners() {
 }
 
 /**
- * Connects to the GitHub API to locate the fresh run data snapshot.
+ * Grabs the latest Run ID and pulls the live link array directly from nightly.link
  */
-async function fetchLatestWorkflowData() {
+async function fetchLiveNightlyIndex() {
     const { owner, repo, workflowFile } = SHADOW_CONFIG.github;
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/runs?status=success&per_page=1`;
+    const githubApiUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/runs?status=success&per_page=1`;
 
     try {
-        const runResponse = await fetch(apiUrl);
-        if (!runResponse.ok) throw new Error(`GitHub API HTTP error: ${runResponse.status}`);
+        // Step 1: Query the raw run ID from GitHub
+        const runResponse = await fetch(githubApiUrl);
+        if (!runResponse.ok) throw new Error(`GitHub endpoint dropped: ${runResponse.status}`);
         
         const runData = await runResponse.json();
         if (!runData.workflow_runs || runData.workflow_runs.length === 0) {
-            throw new Error("No successful runs discovered in repository history.");
+            throw new Error("No successful execution pipelines found.");
         }
 
-        const latestRun = runData.workflow_runs[0];
-        const runId = latestRun.id.toString();
+        const runId = runData.workflow_runs[0].id.toString();
+        runtimeState.liveData.runId = runId;
 
-        // Query the artifact collection associated with this specific run
-        const artifactsUrl = latestRun.artifacts_url;
-        const artifactResponse = await fetch(artifactsUrl);
-        if (!artifactResponse.ok) throw new Error("Artifact array verification dropped.");
+        // Step 2: Query the HTML web portal page of nightly.link via a free client CORS proxy
+        const targetNightlyPage = `https://nightly.link/${owner}/${repo}/actions/runs/${runId}`;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetNightlyPage)}`;
+
+        const pageResponse = await fetch(proxyUrl);
+        if (!pageResponse.ok) throw new Error("CORS proxy service un-resolvable.");
         
-        const artifactData = await artifactResponse.json();
-        if (!artifactData.artifacts || artifactData.artifacts.length === 0) {
-            throw new Error("No zip artifacts detected in active target run context.");
-        }
+        const pageData = await pageResponse.json();
+        const htmlContent = pageData.contents;
 
-        // Get the bare artifact name from GitHub's payload (e.g. "shadowos-gnome-f44-20260604-839b173")
-        const targetSampleName = artifactData.artifacts[0].name;
-        
-        // This regex safely isolates the "-f44" and the remaining date/hash block perfectly
-        const patternMatch = targetSampleName.match(/-(f\d+)-([\d\w-]+)$/);
+        // Step 3: Parse the retrieved page markup to capture all direct download anchor links
+        const temporaryParser = document.createElement('div');
+        temporaryParser.innerHTML = htmlContent;
+        const anchorElements = temporaryParser.querySelectorAll('a[href*="/actions/runs/"]');
 
-        if (patternMatch && patternMatch.length >= 3) {
-            runtimeState.liveData.runId = runId;
-            runtimeState.liveData.fedoraVersion = patternMatch[1]; // Extracts 'f44'
-            runtimeState.liveData.timestamp = patternMatch[2];     // Extracts date-commit block
+        anchorElements.forEach(anchor => {
+            const hrefTarget = anchor.getAttribute('href');
             
-            // Re-evaluate pipeline instantly if the user already clicked everything
-            evaluateShadowPipeline();
-        } else {
-            throw new Error(`Artifact name format mismatch: ${targetSampleName}`);
-        }
+            // Extract just the base filename to map it cleanly (e.g., shadowos-gnome-nvidia-steam...)
+            const urlSegments = hrefTarget.split('/');
+            const rawFilename = urlSegments[urlSegments.length - 1];
+
+            // Isolate the core prefix string by truncating after your matrix variables match
+            const prefixMatch = rawFilename.match(/^(shadowos-[a-z-]+?)-f\d+/);
+            if (prefixMatch) {
+                const variantKey = prefixMatch[1]; // e.g. "shadowos-gnome-nvidia-steam"
+                runtimeState.liveData.resolvedLinks[variantKey] = hrefTarget;
+            }
+        });
+
+        console.log("Nightly.link matrix paths successfully parsed:", Object.keys(runtimeState.liveData.resolvedLinks).length);
+        
+        // Re-evaluate the pipeline display immediately if choices are waiting
+        evaluateShadowPipeline();
 
     } catch (error) {
-        console.error("Failed to fetch fresh release build parameters from GitHub API:", error);
-        
+        console.error("Scraper Engine Fault:", error);
         const buildFilenameText = document.getElementById('build-filename');
         if (buildFilenameText) {
-            buildFilenameText.textContent = "Error loading live build data. Please refresh or check GitHub actions status.";
+            buildFilenameText.textContent = "Error reading active web indexes. Please refresh.";
             buildFilenameText.style.color = "#ff6b6b";
         }
     }
 }
 
-/**
- * Validates tracking variables and renders structural changes to the page.
- */
 function evaluateShadowPipeline() {
     const stepGpu = document.getElementById('step-gpu');
     const stepSteam = document.getElementById('step-steam');
@@ -111,24 +106,18 @@ function evaluateShadowPipeline() {
     const buildFilenameText = document.getElementById('build-filename');
     const downloadBtn = document.querySelector('.download-btn');
 
-    // Progressively reveal elements downstream smoothly
     if (runtimeState.de !== null && stepGpu) stepGpu.classList.add('visible');
     if (runtimeState.de !== null && runtimeState.gpu !== null && stepSteam) stepSteam.classList.add('visible');
 
-    // Validate that all branches have been assigned an explicit choice
     if (runtimeState.de !== null && runtimeState.gpu !== null && runtimeState.steam !== null) {
-        const { owner, repo } = SHADOW_CONFIG.github;
-        const { runId, fedoraVersion, timestamp } = runtimeState.liveData;
-
-        // Assembles the core definition mapping: shadowos-${DE}${GPU}${STEAM}
+        // Construct the selection string match variant target
         const variantTarget = `shadowos-${runtimeState.de}${runtimeState.gpu}${runtimeState.steam}`;
-        
         if (buildStringText) buildStringText.textContent = `VARIANT="${variantTarget}"`;
 
-        // If the API hasn't completed its background fetch yet, hold the display safely
-        if (!runId || !timestamp || !fedoraVersion) {
+        // If background parsing networks haven't populated yet
+        if (!runtimeState.liveData.runId || Object.keys(runtimeState.liveData.resolvedLinks).length === 0) {
             if (buildFilenameText) {
-                buildFilenameText.textContent = "Waiting for data from GitHub Actions API...";
+                buildFilenameText.textContent = "Querying live links from nightly.link indexes...";
                 buildFilenameText.style.color = "var(--accent)";
             }
             if (downloadBtn) downloadBtn.removeAttribute('href');
@@ -136,20 +125,28 @@ function evaluateShadowPipeline() {
             return;
         }
 
-        // Match your exact artifact configuration file tree schema
-        const compiledFilename = `${variantTarget}-${fedoraVersion}-${timestamp}.zip`;
-        
-        if (buildFilenameText) {
-            // Appends the .zip suffix for the UI display block
-            buildFilenameText.textContent = `${compiledFilename}.zip`;
-            buildFilenameText.style.color = "#f0f6fc";
+        // Pull the exactly matched scraped string straight from the collection array
+        const finalDirectUrl = runtimeState.liveData.resolvedLinks[variantTarget];
+
+        if (finalDirectUrl) {
+            const urlSegments = finalDirectUrl.split('/');
+            const visualName = urlSegments[urlSegments.length - 1];
+
+            if (buildFilenameText) {
+                buildFilenameText.textContent = visualName;
+                buildFilenameText.style.color = "#f0f6fc";
+            }
+            if (downloadBtn) {
+                downloadBtn.href = finalDirectUrl;
+            }
+        } else {
+            if (buildFilenameText) {
+                buildFilenameText.textContent = "Selected variant artifact not found on latest successful build run.";
+                buildFilenameText.style.color = "#ff6b6b";
+            }
+            if (downloadBtn) downloadBtn.removeAttribute('href');
         }
-        
-        // Dynamically build your exact nightly.link asset path structure with double extension mapping
-        if (downloadBtn) {
-            downloadBtn.href = `https://nightly.link/${owner}/${repo}/actions/runs/${runId}/${compiledFilename}.zip`;
-        }
-        
+
         if (finalDownload) finalDownload.classList.add('visible');
     } else {
         if (finalDownload) finalDownload.classList.remove('visible');
