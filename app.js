@@ -1,9 +1,14 @@
+/**
+ * ShadowOS Selector State Machine & Artifact Parser
+ * Maps variant configurations directly to unique internal GitHub Suite & Artifact IDs.
+ */
+
 const runtimeState = {
     de: null,
     gpu: null,
     steam: null,
     liveData: {
-        runId: null,
+        suiteId: null,
         artifacts: {}
     }
 };
@@ -13,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLatestArtifacts();
 });
 
+// Binds layout grid options to state machine variables
 function initializeUIEventListeners() {
     document.querySelectorAll('.grid button').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -34,14 +40,14 @@ function initializeUIEventListeners() {
 }
 
 /**
- * Queries GitHub's Artifact sub-endpoint to capture file names and unique internal IDs
+ * Queries GitHub's Workflow and Artifact endpoints to resolve suite and artifact indices
  */
 async function fetchLatestArtifacts() {
     const { owner, repo, workflowFile } = SHADOW_CONFIG.github;
     const runUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/runs?status=success&per_page=1`;
 
     try {
-        // Step 1: Extract top-level Run ID
+        // Step 1: Extract top-level Run ID and the internal Check Suite ID
         const runResponse = await fetch(runUrl);
         if (!runResponse.ok) throw new Error(`Workflow API responded with status: ${runResponse.status}`);
         
@@ -52,9 +58,11 @@ async function fetchLatestArtifacts() {
 
         const latestRun = runData.workflow_runs[0];
         const runId = latestRun.id.toString();
-        runtimeState.liveData.runId = runId;
+        
+        // Capture the target suite id required for nightly.link individual routing profiles
+        runtimeState.liveData.suiteId = latestRun.check_suite_id.toString();
 
-        // Step 2: Query the official artifacts index for this run
+        // Step 2: Query the official artifacts index for this specific run context
         const artifactsUrl = `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/artifacts`;
         const artifactResponse = await fetch(artifactsUrl);
         if (!artifactResponse.ok) throw new Error(`Artifacts sub-API dropped: ${artifactResponse.status}`);
@@ -64,23 +72,23 @@ async function fetchLatestArtifacts() {
             throw new Error("Run log contains no archived zip payloads.");
         }
 
-        // Step 3: Loop and catalog the exact file name and internal item ID for every asset
+        // Step 3: Catalog the exact file name and internal item artifact ID
         artifactData.artifacts.forEach(item => {
-            const fileName = item.name;     // e.g., "shadowos-linux-nvidia-steam-f44-..."
-            const internalId = item.id.toString(); // The "2nd id" unique to this artifact item
+            const fileName = item.name;
+            const internalArtifactId = item.id.toString();
             
-            // Isolate the variant identifier block cleanly
+            // Isolate the core variant descriptor prefix string
             const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?)-f\d+/);
             if (prefixMatch) {
                 const variantKey = prefixMatch[1]; // e.g., "shadowos-linux-nvidia-steam"
                 runtimeState.liveData.artifacts[variantKey] = {
                     name: fileName,
-                    id: internalId
+                    id: internalArtifactId
                 };
             }
         });
 
-        console.log("Successfully cataloged build matrix targets:", Object.keys(runtimeState.liveData.artifacts));
+        console.log(`Pipeline Indexed! Suite ID: ${runtimeState.liveData.suiteId} | Artifacts:`, Object.keys(runtimeState.liveData.artifacts));
 
         // Evaluate instantly if choices are already made
         evaluateShadowPipeline();
@@ -114,7 +122,7 @@ function evaluateShadowPipeline() {
         if (buildStringText) buildStringText.textContent = `VARIANT="${variantTarget}"`;
 
         // If background data hasn't finished loading yet
-        if (!runtimeState.liveData.runId || Object.keys(runtimeState.liveData.artifacts).length === 0) {
+        if (!runtimeState.liveData.suiteId || Object.keys(runtimeState.liveData.artifacts).length === 0) {
             if (buildFilenameText) {
                 buildFilenameText.textContent = "Fetching build tracking metrics from GitHub index...";
                 buildFilenameText.style.color = "var(--accent)";
@@ -134,7 +142,7 @@ function evaluateShadowPipeline() {
             }
             
             if (downloadBtn) {
-                downloadBtn.href = `https://nightly.link/${owner}/${repo}/actions/runs/${runtimeState.liveData.runId}/artifacts/${matchedArtifact.id}`;
+                downloadBtn.href = `https://nightly.link/${owner}/${repo}/suites/${runtimeState.liveData.suiteId}/artifacts/${matchedArtifact.id}`;
             }
         } else {
             if (buildFilenameText) {
