@@ -13,9 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLatestArtifacts();
 });
 
-// Binds layout options and branding hooks to the engine state
+// Binds layout options and interaction hooks to the engine state
 function initializeUIEventListeners() {
-    // 1. Matrix Selection Handling
     document.querySelectorAll('.grid button').forEach(button => {
         button.addEventListener('click', (e) => {
             const currentButton = e.currentTarget;
@@ -33,28 +32,6 @@ function initializeUIEventListeners() {
             evaluateShadowPipeline();
         });
     });
-
-    // 2. Initial "Build a Custom Image" Revelation Logic
-    const quickBtn = document.getElementById('quick-download-btn');
-    if (quickBtn) {
-        quickBtn.addEventListener('click', () => {
-            const wrapper = document.getElementById('configurator-wrapper');
-            const heroArea = document.getElementById('hero-trigger-area');
-            
-            if (wrapper) {
-                wrapper.classList.add('visible');
-                // Smoothly roll display view downward into options frame
-                setTimeout(() => {
-                    wrapper.scrollIntoView({ behavior: 'smooth' });
-                }, 50);
-            }
-            
-            // Elegantly vanish the top entry button space since customization is now active
-            if (heroArea) {
-                heroArea.style.display = 'none';
-            }
-        });
-    }
 }
 
 /**
