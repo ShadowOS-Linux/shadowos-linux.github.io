@@ -1,12 +1,12 @@
-// Global runtime state tracking
+// Global runtime state tracking - Clean start with no hardcoded fallback info
 const runtimeState = {
     de: null,
     gpu: null,
     steam: null,
     liveData: {
         runId: null,
-        fedoraVersion: "f44", // Default guess while fetching
-        timestamp: ""
+        fedoraVersion: null,
+        timestamp: null
     }
 };
 
@@ -72,8 +72,10 @@ async function fetchLatestWorkflowData() {
             throw new Error("No zip artifacts detected in active target run context.");
         }
 
-        // Parse artifact title pattern example: shadowos-gnome-f44-20260604-839b173
+        // Get the bare artifact name from GitHub's payload (e.g. "shadowos-gnome-f44-20260604-839b173")
         const targetSampleName = artifactData.artifacts[0].name;
+        
+        // This regex safely isolates the "-f44" and the remaining date/hash block perfectly
         const patternMatch = targetSampleName.match(/-(f\d+)-([\d\w-]+)$/);
 
         if (patternMatch && patternMatch.length >= 3) {
@@ -81,17 +83,18 @@ async function fetchLatestWorkflowData() {
             runtimeState.liveData.fedoraVersion = patternMatch[1]; // Extracts 'f44'
             runtimeState.liveData.timestamp = patternMatch[2];     // Extracts date-commit block
             
-            // Re-evaluate pipeline if a full configuration was already selected before API returned
+            // Re-evaluate pipeline instantly if the user already clicked everything
             evaluateShadowPipeline();
+        } else {
+            throw new Error(`Artifact name format mismatch: ${targetSampleName}`);
         }
 
     } catch (error) {
         console.error("Failed to fetch fresh release build parameters from GitHub API:", error);
         
-        // Non-breaking visual warning to let you know why links cannot fully generate
         const buildFilenameText = document.getElementById('build-filename');
         if (buildFilenameText) {
-            buildFilenameText.textContent = "Error loading build parameters. GitHub API rate limit likely reached.";
+            buildFilenameText.textContent = "Error loading live build data. Please refresh or check GitHub actions status.";
             buildFilenameText.style.color = "#ff6b6b";
         }
     }
@@ -122,8 +125,8 @@ function evaluateShadowPipeline() {
         
         if (buildStringText) buildStringText.textContent = `VARIANT="${variantTarget}"`;
 
-        // If the API hasn't resolved yet or failed completely, block the download card generation
-        if (!runId || !timestamp) {
+        // If the API hasn't completed its background fetch yet, hold the display safely
+        if (!runId || !timestamp || !fedoraVersion) {
             if (buildFilenameText) {
                 buildFilenameText.textContent = "Waiting for data from GitHub Actions API...";
                 buildFilenameText.style.color = "var(--accent)";
@@ -133,10 +136,12 @@ function evaluateShadowPipeline() {
             return;
         }
 
-        // Match the layout observed in your workflow storage structure
+        // Match your exact artifact configuration file tree schema
         const compiledFilename = `${variantTarget}-${fedoraVersion}-${timestamp}.zip`;
+        
         if (buildFilenameText) {
-            buildFilenameText.textContent = compiledFilename;
+            // Appends the .zip suffix for the UI display block
+            buildFilenameText.textContent = `${compiledFilename}.zip`;
             buildFilenameText.style.color = "#f0f6fc";
         }
         
