@@ -1,8 +1,3 @@
-/**
- * ShadowOS Selector State Machine & Artifact Parser
- * Maps variant configurations directly to unique internal GitHub Suite & Artifact IDs.
- */
-
 const runtimeState = {
     de: null,
     gpu: null,
@@ -18,8 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLatestArtifacts();
 });
 
-// Binds layout grid options to state machine variables
+// Binds layout grid options and hero action elements to the engine state
 function initializeUIEventListeners() {
+    // 1. Matrix Selection Handling
     document.querySelectorAll('.grid button').forEach(button => {
         button.addEventListener('click', (e) => {
             const currentButton = e.currentTarget;
@@ -37,6 +33,17 @@ function initializeUIEventListeners() {
             evaluateShadowPipeline();
         });
     });
+
+    // 2. Top "Quick Download" Scroll-To-Configurator Interaction
+    const quickBtn = document.getElementById('quick-download-btn');
+    if (quickBtn) {
+        quickBtn.addEventListener('click', () => {
+            const targetConfigurator = document.querySelector('.step-section');
+            if (targetConfigurator) {
+                targetConfigurator.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 }
 
 /**
