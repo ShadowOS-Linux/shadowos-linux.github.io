@@ -122,7 +122,7 @@ function evaluateShadowPipeline() {
 
         if (matchedArtifact) {
             if (buildFilenameText) {
-                buildFilenameText.textContent = `${matchedArtifact.name}.zip`;
+                buildFilenameText.textContent = matchedArtifact.name;
                 buildFilenameText.style.color = "#f0f6fc";
             }
             if (downloadBtn) {
