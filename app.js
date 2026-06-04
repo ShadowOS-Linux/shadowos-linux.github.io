@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLatestArtifacts();
 });
 
-// Binds layout grid options and hero action elements to the engine state
+// Binds layout options and branding hooks to the engine state
 function initializeUIEventListeners() {
     // 1. Matrix Selection Handling
     document.querySelectorAll('.grid button').forEach(button => {
@@ -34,13 +34,24 @@ function initializeUIEventListeners() {
         });
     });
 
-    // 2. Top "Quick Download" Scroll-To-Configurator Interaction
+    // 2. Initial "Build a Custom Image" Revelation Logic
     const quickBtn = document.getElementById('quick-download-btn');
     if (quickBtn) {
         quickBtn.addEventListener('click', () => {
-            const targetConfigurator = document.querySelector('.step-section');
-            if (targetConfigurator) {
-                targetConfigurator.scrollIntoView({ behavior: 'smooth' });
+            const wrapper = document.getElementById('configurator-wrapper');
+            const heroArea = document.getElementById('hero-trigger-area');
+            
+            if (wrapper) {
+                wrapper.classList.add('visible');
+                // Smoothly roll display view downward into options frame
+                setTimeout(() => {
+                    wrapper.scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            }
+            
+            // Elegantly vanish the top entry button space since customization is now active
+            if (heroArea) {
+                heroArea.style.display = 'none';
             }
         });
     }
@@ -54,7 +65,6 @@ async function fetchLatestArtifacts() {
     const runUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/runs?status=success&per_page=1`;
 
     try {
-        // Step 1: Extract top-level Run ID and the internal Check Suite ID
         const runResponse = await fetch(runUrl);
         if (!runResponse.ok) throw new Error(`Workflow API responded with status: ${runResponse.status}`);
         
@@ -66,10 +76,8 @@ async function fetchLatestArtifacts() {
         const latestRun = runData.workflow_runs[0];
         const runId = latestRun.id.toString();
         
-        // Capture the target suite id required for nightly.link individual routing profiles
         runtimeState.liveData.suiteId = latestRun.check_suite_id.toString();
 
-        // Step 2: Query the official artifacts index for this specific run context
         const artifactsUrl = `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/artifacts`;
         const artifactResponse = await fetch(artifactsUrl);
         if (!artifactResponse.ok) throw new Error(`Artifacts sub-API dropped: ${artifactResponse.status}`);
@@ -79,15 +87,13 @@ async function fetchLatestArtifacts() {
             throw new Error("Run log contains no archived zip payloads.");
         }
 
-        // Step 3: Catalog the exact file name and internal item artifact ID
         artifactData.artifacts.forEach(item => {
             const fileName = item.name;
             const internalArtifactId = item.id.toString();
             
-            // Isolate the core variant descriptor prefix string
             const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?)-f\d+/);
             if (prefixMatch) {
-                const variantKey = prefixMatch[1]; // e.g., "shadowos-linux-nvidia-steam"
+                const variantKey = prefixMatch[1];
                 runtimeState.liveData.artifacts[variantKey] = {
                     name: fileName,
                     id: internalArtifactId
@@ -95,14 +101,11 @@ async function fetchLatestArtifacts() {
             }
         });
 
-        console.log(`Pipeline Indexed! Suite ID: ${runtimeState.liveData.suiteId} | Artifacts:`, Object.keys(runtimeState.liveData.artifacts));
-
-        // Evaluate instantly if choices are already made
+        console.log(`Pipeline Indexed! Suite ID: ${runtimeState.liveData.suiteId}`);
         evaluateShadowPipeline();
 
     } catch (error) {
         console.error("Failed to sync remote artifact tree:", error);
-        
         const buildFilenameText = document.getElementById('build-filename');
         if (buildFilenameText) {
             buildFilenameText.textContent = "Error parsing real-time build names. Please refresh.";
@@ -128,7 +131,6 @@ function evaluateShadowPipeline() {
         
         if (buildStringText) buildStringText.textContent = `VARIANT="${variantTarget}"`;
 
-        // If background data hasn't finished loading yet
         if (!runtimeState.liveData.suiteId || Object.keys(runtimeState.liveData.artifacts).length === 0) {
             if (buildFilenameText) {
                 buildFilenameText.textContent = "Fetching build tracking metrics from GitHub index...";
@@ -139,7 +141,6 @@ function evaluateShadowPipeline() {
             return;
         }
 
-        // Pull the structural file block matching this specific selection match
         const matchedArtifact = runtimeState.liveData.artifacts[variantTarget];
 
         if (matchedArtifact) {
@@ -147,7 +148,6 @@ function evaluateShadowPipeline() {
                 buildFilenameText.textContent = `${matchedArtifact.name}.zip`;
                 buildFilenameText.style.color = "#f0f6fc";
             }
-            
             if (downloadBtn) {
                 downloadBtn.href = `https://nightly.link/${owner}/${repo}/suites/${runtimeState.liveData.suiteId}/artifacts/${matchedArtifact.id}`;
             }
