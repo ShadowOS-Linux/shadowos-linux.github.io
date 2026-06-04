@@ -123,3 +123,67 @@ h2 {
 .download-btn:hover {
     background-color: #2ea043;
 }
+
+.brand-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand-logo {
+    height: 50px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;   
+    image-rendering: auto;
+    margin-bottom: 1rem;
+}
+
+.brand-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #f0f6fc;
+    margin: 0;
+}
+
+.brand-subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.hero-download-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.primary-action-btn {
+    background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+    color: #ffffff;
+    border: 1px solid rgba(240, 246, 242, 0.1);
+    padding: 1rem 2.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(35, 134, 54, 0.15);
+}
+
+.primary-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 160, 67, 0.3);
+}
+
+.primary-action-btn:active {
+    transform: translateY(0);
+}
+
+.divider-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #30363d;
+    letter-spacing: 1.5px;
+    margin-top: 2rem;
+}
