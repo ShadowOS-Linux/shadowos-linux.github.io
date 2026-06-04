@@ -93,7 +93,7 @@ h2 {
 .conditional-step.visible {
     opacity: 1;
     visibility: visible;
-    max-height: 2000px; /* Increased to comfortably unfold the full wrapper cluster */
+    max-height: 1000px;
     transform: scale(1);
     transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out, max-height 0.45s ease-in-out, visibility 0s 0s;
 }
@@ -154,33 +154,13 @@ h2 {
     font-weight: 400;
 }
 
-/* Entry Feature Trigger View */
-.hero-download-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 0;
-    margin-bottom: 1rem;
-}
-
-.primary-action-btn {
-    background: linear-gradient(180deg, #1f6feb 0%, #0969da 100%);
-    color: #ffffff;
-    border: 1px solid rgba(240, 246, 242, 0.15);
-    padding: 1.1rem 3.5rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s;
-    box-shadow: 0 4px 12px rgba(9, 105, 218, 0.2);
-}
-
-.primary-action-btn:hover {
-    background: linear-gradient(180deg, #388bfd 0%, #1f6feb 100%);
-    box-shadow: 0 6px 20px rgba(31, 111, 235, 0.35);
-}
-
-.primary-action-btn:active {
-    transform: scale(0.98);
+/* Small, clean section divider text */
+.section-divider-tag {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--border-color);
+    letter-spacing: 2px;
+    margin: 2rem 0 3rem 0;
+    user-select: none;
 }
