@@ -3,12 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShadowOS Image Selector</title>
+    <title>ShadowOS Linux</title>
+    
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
+
+    <header class="brand-header">
+        <img src="images/logo.png" alt="ShadowOS Logo" class="brand-logo">
+        <h1>ShadowOS Linux</h1>
+        <p class="brand-subtitle">Custom Bazzite image with Cosmic/Gnome/XFCE.</p>
+    </header>
+
+    <div class="hero-download-section">
+        <button id="quick-download-btn" class="primary-action-btn">
+            <span>Download Latest Stable</span>
+        </button>
+        <div class="divider-text">— OR CUSTOMIZE YOUR BUILD —</div>
+    </div>
     
     <div class="step-section">
         <h2>1. Desktop Environment</h2>
@@ -17,7 +33,7 @@
         <div class="grid" data-step="de">
             <button class="option-btn" data-value="linux">
                 <h3>COSMIC</h3>
-                <p>The default option based on the COSMIC desktop environment.</p>
+                <p>The option based on the COSMIC desktop environment.</p>
             </button>
             <button class="option-btn" data-value="gnome">
                 <h3>GNOME</h3>
