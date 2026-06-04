@@ -20,82 +20,74 @@
         <p class="brand-subtitle">Custom Bazzite image with Cosmic/Gnome/XFCE.</p>
     </header>
 
-    <div id="hero-trigger-area" class="hero-download-section">
-        <button id="quick-download-btn" class="primary-action-btn">
-            Build a Custom Image
-        </button>
-    </div>
+    <div class="section-divider-tag">IMAGE CONFIGURATOR</div>
     
-    <div id="configurator-wrapper" class="conditional-step">
+    <div class="step-section">
+        <h2>1. Desktop Environment</h2>
+        <p class="subtitle">Choose your preferred desktop layout.</p>
         
-        <div class="step-section">
-            <h2>1. Desktop Environment</h2>
-            <p class="subtitle">Choose your preferred desktop layout.</p>
+        <div class="grid" data-step="de">
+            <button class="option-btn" data-value="linux">
+                <h3>COSMIC</h3>
+                <p>The option based on the COSMIC desktop environment.</p>
+            </button>
+            <button class="option-btn" data-value="gnome">
+                <h3>GNOME</h3>
+                <p>The standard modern GNOME desktop layout.</p>
+            </button>
+            <button class="option-btn" data-value="xfce">
+                <h3>XFCE</h3>
+                <p>A simple and traditional lightweight desktop environment.</p>
+            </button>
+        </div>
+    </div>
+
+    <div id="step-gpu" class="step-section conditional-step">
+        <h2>2. Graphics Drivers</h2>
+        <p class="subtitle">Select the drivers your graphics hardware requires.</p>
+        
+        <div class="grid" data-step="gpu">
+            <button class="option-btn" data-value="">
+                <h3>AMD / Intel</h3>
+                <p>Uses the standard built-in open-source drivers.</p>
+            </button>
+            <button class="option-btn" data-value="-nvidia">
+                <h3>NVIDIA Modern</h3>
+                <p>Includes proprietary drivers for GTX 16xx and RTX series cards.</p>
+            </button>
+            <button class="option-btn" data-value="-nvidia-legacy">
+                <h3>NVIDIA Legacy</h3>
+                <p>Includes legacy drivers for older GTX 9xx and 10xx series cards.</p>
+            </button>
+        </div>
+    </div>
+
+    <div id="step-steam" class="step-section conditional-step">
+        <h2>3. Gaming Applications</h2>
+        <p class="subtitle">Choose whether you want Steam bundled with the system setup.</p>
+        
+        <div class="grid" data-step="steam">
+            <button class="option-btn" data-value="-steam">
+                <h3>Steam</h3>
+                <p>Includes Steam as a system package.</p>
+            </button>
+            <button class="option-btn" data-value="">
+                <h3>No Steam</h3>
+                <p>Doesn't include Steam by default.</p>
+            </button>
+        </div>
+    </div>
+
+    <div id="final-download" class="conditional-step">
+        <div class="download-box">
+            <h3>Your Selected Variant Variable:</h3>
+            <p id="configuration-string" style="font-family: monospace; font-size: 1.2rem; color: var(--accent); margin: 0.5rem 0;"></p>
             
-            <div class="grid" data-step="de">
-                <button class="option-btn" data-value="linux">
-                    <h3>COSMIC</h3>
-                    <p>The option based on the COSMIC desktop environment.</p>
-                </button>
-                <button class="option-btn" data-value="gnome">
-                    <h3>GNOME</h3>
-                    <p>The standard modern GNOME desktop layout.</p>
-                </button>
-                <button class="option-btn" data-value="xfce">
-                    <h3>XFCE</h3>
-                    <p>A simple and traditional lightweight desktop environment.</p>
-                </button>
-            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                Target File: <span id="build-filename" style="color: #f0f6fc;">Detecting latest build...</span>
+            </p>
+            <a href="#" class="download-btn">Download Release (.zip)</a>
         </div>
-
-        <div id="step-gpu" class="step-section conditional-step">
-            <h2>2. Graphics Drivers</h2>
-            <p class="subtitle">Select the drivers your graphics hardware requires.</p>
-            
-            <div class="grid" data-step="gpu">
-                <button class="option-btn" data-value="">
-                    <h3>AMD / Intel</h3>
-                    <p>Uses the standard built-in open-source drivers.</p>
-                </button>
-                <button class="option-btn" data-value="-nvidia">
-                    <h3>NVIDIA Modern</h3>
-                    <p>Includes proprietary drivers for GTX 16xx and RTX series cards.</p>
-                </button>
-                <button class="option-btn" data-value="-nvidia-legacy">
-                    <h3>NVIDIA Legacy</h3>
-                    <p>Includes legacy drivers for older GTX 9xx and 10xx series cards.</p>
-                </button>
-            </div>
-        </div>
-
-        <div id="step-steam" class="step-section conditional-step">
-            <h2>3. Gaming Applications</h2>
-            <p class="subtitle">Choose whether you want Steam bundled with the system setup.</p>
-            
-            <div class="grid" data-step="steam">
-                <button class="option-btn" data-value="-steam">
-                    <h3>Steam</h3>
-                    <p>Includes Steam as a system package.</p>
-                </button>
-                <button class="option-btn" data-value="">
-                    <h3>No Steam</h3>
-                    <p>Doesn't include Steam by default.</p>
-                </button>
-            </div>
-        </div>
-
-        <div id="final-download" class="conditional-step">
-            <div class="download-box">
-                <h3>Your Selected Variant Variable:</h3>
-                <p id="configuration-string" style="font-family: monospace; font-size: 1.2rem; color: var(--accent); margin: 0.5rem 0;"></p>
-                
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-                    Target File: <span id="build-filename" style="color: #f0f6fc;">Detecting latest build...</span>
-                </p>
-                <a href="#" class="download-btn">Download Release (.zip)</a>
-            </div>
-        </div>
-
     </div>
 
 </div>
