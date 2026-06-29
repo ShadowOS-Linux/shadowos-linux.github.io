@@ -20,131 +20,137 @@
         <p class="brand-subtitle">Custom Bazzite image with Cosmic/Gnome/KDE/XFCE.</p>
     </header>
 
-    <div class="section-divider-tag">FEATURES</div>
+    <div class="main-layout">
+        
+        <div class="left-column">
+            <div class="section-divider-tag">FEATURES</div>
+            <div class="features-section">
+                <div class="grid feature-grid">
+                    
+                    <div class="feature-card">
+                        <h3>Atomic Foundation</h3>
+                        <p>Inherits all the cutting-edge game compatibility, stability, and immutability benefits of <a href="https://github.com/ublue-os/bazzite" target="_blank">Bazzite</a>, <a href="https://github.com/ublue-os/bazzite#universal-blue" target="_blank">Universal Blue</a>, and <a href="https://github.com/ublue-os/bazzite#features-from-fedora-linux-kinoite--silverblue" target="_blank">Fedora Atomic</a>.</p>
+                    </div>
 
-    <div class="features-section">
-        <div class="grid feature-grid">
+                    <div class="feature-card">
+                        <h3>4 Desktop Environments</h3>
+                        <p>Choose between COSMIC, XFCE, KDE, or GNOME out of the box instead of being restricted to just two layout choices.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Nostalgic Themes</h3>
+                        <p>Features a seamless Windows 7 look in KDE via <a href="https://gitgud.io/wackyideas/aerothemeplasma" target="_blank">AeroThemePlasma</a> and a tweaked Windows XP environment in XFCE using <a href="https://github.com/rozniak/xfce-winxp-tc" target="_blank">xfce-winxp-tc</a>.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Tailored Layouts</h3>
+                        <p>GNOME comes pre-configured with active production extensions, COSMIC features a familiar Windows-style panel configuration, and stays up to date via the <code>cosmic-epoch</code> copr repository.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Privacy-First Browsing</h3>
+                        <p>Firefox is swapped for LibreWolf with user-friendly presets applied, styled dynamically with the <a href="https://github.com/rafaelmardojai/firefox-gnome-theme" target="_blank">Firefox GNOME theme</a> and compact extension panels via <a href="https://github.com/MrOtherGuy/firefox-csshacks" target="_blank">firefox-csshacks</a>.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Upgraded Gaming Stack</h3>
+                        <p>Steam is completely optional. Features automatic DLSS generation upgrades across all titles and includes a <a href="https://github.com/ShadowElixir/HeroicGamesLauncher" target="_blank">custom build</a> of <a href="https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher" target="_blank">Heroic Games Launcher</a> containing the Console Mode view patch.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Android Power Tools</h3>
+                        <p>Full system integration for mobile power users with ADB, <a href="https://github.com/Genymobile/scrcpy" target="_blank">scrcpy</a>, and the <a href="https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation" target="_blank">Universal Android Debloater</a> bundled directly into the core image.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>Smart Automation</h3>
+                        <p>Toggle hardware integrations effortlessly with built-in commands like <code>ujust scrcpy-cam</code> to use your phone as a webcam, <code>ujust toggle-autologin</code> for auto-login, and global MangoHUD toggling via the <code>END</code> key.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="section-divider-tag">DOWNLOAD</div>
             
-            <div class="feature-card">
-                <h3>Atomic Foundation</h3>
-                <p>Inherits all the cutting-edge game compatibility, stability, and immutability benefits of <a href="https://github.com/ublue-os/bazzite" target="_blank">Bazzite</a>, <a href="https://github.com/ublue-os/bazzite#universal-blue" target="_blank">Universal Blue</a>, and <a href="https://github.com/ublue-os/bazzite#features-from-fedora-linux-kinoite--silverblue" target="_blank">Fedora Atomic</a>.</p>
+            <div class="step-section">
+                <h2>1. Desktop Environment</h2>
+                <p class="subtitle">Choose your preferred desktop layout.</p>
+                
+                <div class="grid" data-step="de">
+                    <button class="option-btn" data-value="linux">
+                        <h3>COSMIC</h3>
+                        <p>The option based on the COSMIC desktop environment.</p>
+                    </button>
+                    <button class="option-btn" data-value="gnome">
+                        <h3>GNOME</h3>
+                        <p>The standard modern GNOME desktop layout.</p>
+                    </button>
+                    <button class="option-btn" data-value="kde">
+                        <h3>KDE Plasma</h3>
+                        <p>A highly customizable and familiar desktop experience.</p>
+                    </button>
+                    <button class="option-btn" data-value="xfce">
+                        <h3>XFCE</h3>
+                        <p>A simple and traditional lightweight desktop environment.</p>
+                    </button>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <h3>4 Desktop Environments</h3>
-                <p>Choose between COSMIC, XFCE, KDE, or GNOME out of the box instead of being restricted to just two layout choices.</p>
+            <div id="step-gpu" class="step-section conditional-step">
+                <h2>2. Graphics Drivers</h2>
+                <p class="subtitle">Select the drivers your graphics hardware requires.</p>
+                
+                <div class="grid" data-step="gpu">
+                    <button class="option-btn" data-value="">
+                        <h3>AMD / Intel</h3>
+                        <p>Uses the standard built-in open-source drivers.</p>
+                    </button>
+                    <button class="option-btn" data-value="-nvidia">
+                        <h3>NVIDIA Open</h3>
+                        <p>Includes modern drivers for GTX 16xx and RTX series cards.</p>
+                    </button>
+                    <button class="option-btn" data-value="-nvidia-legacy">
+                        <h3>NVIDIA Legacy</h3>
+                        <p>Includes closed-source drivers for GTX 745 and later cards.</p>
+                    </button>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <h3>Nostalgic Themes</h3>
-                <p>Features a seamless Windows 7 look in KDE via <a href="https://gitgud.io/wackyideas/aerothemeplasma" target="_blank">AeroThemePlasma</a> and a tweaked Windows XP environment in XFCE using <a href="https://github.com/rozniak/xfce-winxp-tc" target="_blank">xfce-winxp-tc</a>.</p>
+            <div id="step-steam" class="step-section conditional-step">
+                <h2>3. Steam</h2>
+                <p class="subtitle">Choose whether you want Steam bundled with the system setup.</p>
+                
+                <div class="grid" data-step="steam">
+                    <button class="option-btn" data-value="-steam">
+                        <h3>Steam</h3>
+                        <p>Includes Steam as a system package.</p>
+                    </button>
+                    <button class="option-btn" data-value="">
+                        <h3>No Steam</h3>
+                        <p>Doesn't include Steam by default.</p>
+                    </button>
+                </div>
             </div>
 
-            <div class="feature-card">
-                <h3>Tailored Layouts</h3>
-                <p>GNOME comes pre-configured with active production extensions, COSMIC features a familiar Windows-style panel configuration, and stays up to date via the <code>cosmic-epoch</code> copr repository.</p>
+            <div id="final-download" class="conditional-step">
+                <div class="download-box">
+                    <h3>Your Selected Variant Variable:</h3>
+                    <p id="configuration-string" style="font-family: monospace; font-size: 1.2rem; color: var(--accent); margin: 0.5rem 0;"></p>
+                    
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                        Target File: <span id="build-filename" style="color: #f0f6fc;">Detecting latest build...</span>
+                    </p>
+                    <a href="#" class="download-btn">Download Release (.zip)</a>
+                </div>
             </div>
-
-            <div class="feature-card">
-                <h3>Privacy-First Browsing</h3>
-                <p>Firefox is swapped for LibreWolf with user-friendly presets applied, styled dynamically with the <a href="https://github.com/rafaelmardojai/firefox-gnome-theme" target="_blank">Firefox GNOME theme</a> and compact extension panels via <a href="https://github.com/MrOtherGuy/firefox-csshacks" target="_blank">firefox-csshacks</a>.</p>
-            </div>
-
-            <div class="feature-card">
-                <h3>Upgraded Gaming Stack</h3>
-                <p>Steam is completely optional. Features automatic DLSS generation upgrades across all titles and includes a <a href="https://github.com/ShadowElixir/HeroicGamesLauncher" target="_blank">custom build</a> of <a href="https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher" target="_blank">Heroic Games Launcher</a> containing the Console Mode view patch.</p>
-            </div>
-
-            <div class="feature-card">
-                <h3>Android Power Tools</h3>
-                <p>Full system integration for mobile power users with ADB, <a href="https://github.com/Genymobile/scrcpy" target="_blank">scrcpy</a>, and the <a href="https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation" target="_blank">Universal Android Debloater</a> bundled directly into the core image.</p>
-            </div>
-
-            <div class="feature-card">
-                <h3>Smart Automation</h3>
-                <p>Toggle hardware integrations effortlessly with built-in commands like <code>ujust scrcpy-cam</code> to use your phone as a webcam, <code>ujust toggle-autologin</code> for auto-login, and global MangoHUD toggling via the <code>END</code> key.</p>
-            </div>
-
         </div>
-    </div>
 
-    <div class="section-divider-tag">DOWNLOAD</div>
-    
-    <div class="step-section">
-        <h2>1. Desktop Environment</h2>
-        <p class="subtitle">Choose your preferred desktop layout.</p>
-        
-        <div class="grid" data-step="de">
-            <button class="option-btn" data-value="linux">
-                <h3>COSMIC</h3>
-                <p>The option based on the COSMIC desktop environment.</p>
-            </button>
-            <button class="option-btn" data-value="gnome">
-                <h3>GNOME</h3>
-                <p>The standard modern GNOME desktop layout.</p>
-            </button>
-            <button class="option-btn" data-value="kde">
-                <h3>KDE Plasma</h3>
-                <p>A highly customizable and familiar desktop experience.</p>
-            </button>
-            <button class="option-btn" data-value="xfce">
-                <h3>XFCE</h3>
-                <p>A simple and traditional lightweight desktop environment.</p>
-            </button>
-        </div>
-    </div>
-
-    <div id="step-gpu" class="step-section conditional-step">
-        <h2>2. Graphics Drivers</h2>
-        <p class="subtitle">Select the drivers your graphics hardware requires.</p>
-        
-        <div class="grid" data-step="gpu">
-            <button class="option-btn" data-value="">
-                <h3>AMD / Intel</h3>
-                <p>Uses the standard built-in open-source drivers.</p>
-            </button>
-            <button class="option-btn" data-value="-nvidia">
-                <h3>NVIDIA Open</h3>
-                <p>Includes modern drivers for GTX 16xx and RTX series cards.</p>
-            </button>
-            <button class="option-btn" data-value="-nvidia-legacy">
-                <h3>NVIDIA Legacy</h3>
-                <p>Includes closed-source drivers for GTX 745 and later cards.</p>
-            </button>
-        </div>
-    </div>
-
-    <div id="step-steam" class="step-section conditional-step">
-        <h2>3. Steam</h2>
-        <p class="subtitle">Choose whether you want Steam bundled with the system setup.</p>
-        
-        <div class="grid" data-step="steam">
-            <button class="option-btn" data-value="-steam">
-                <h3>Steam</h3>
-                <p>Includes Steam as a system package.</p>
-            </button>
-            <button class="option-btn" data-value="">
-                <h3>No Steam</h3>
-                <p>Doesn't include Steam by default.</p>
-            </button>
-        </div>
-    </div>
-
-    <div id="final-download" class="conditional-step">
-        <div class="download-box">
-            <h3>Your Selected Variant Variable:</h3>
-            <p id="configuration-string" style="font-family: monospace; font-size: 1.2rem; color: var(--accent); margin: 0.5rem 0;"></p>
-            
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-                Target File: <span id="build-filename" style="color: #f0f6fc;">Detecting latest build...</span>
-            </p>
-            <a href="#" class="download-btn">Download Release (.zip)</a>
-        </div>
     </div>
 
 </div>
 
-<script src="config.js"></script>
 <script src="app.js"></script>
 
 </body>
