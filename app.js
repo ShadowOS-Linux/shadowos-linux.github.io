@@ -1,3 +1,11 @@
+const SHADOW_CONFIG = {
+    github: {
+        owner: "ShadowOS-Linux",
+        repo: "shadowos-linux",
+        workflowFile: "build-iso.yml"
+    }
+};
+
 const runtimeState = {
     de: null,
     gpu: null,
