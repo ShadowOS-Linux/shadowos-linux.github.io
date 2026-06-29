@@ -157,11 +157,11 @@ h2 {
 /* Small, clean section divider text */
 .section-divider-tag {
     text-align: center;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--border-color);
-    letter-spacing: 2px;
-    margin: 2rem 0 3rem 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #f0f6fc;
+    letter-spacing: 3px;
+    margin: 3.5rem 0 2rem 0;
     user-select: none;
 }
 
@@ -171,7 +171,13 @@ h2 {
 }
 
 .feature-grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+}
+
+@media (min-width: 900px) {
+    .feature-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 .feature-card {
