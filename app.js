@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Binds layout options and interaction hooks to the engine state
 function initializeUIEventListeners() {
-    document.querySelectorAll('.grid button').forEach(button => {
+    document.querySelectorAll('.selector-grid button').forEach(button => {
         button.addEventListener('click', (e) => {
             const currentButton = e.currentTarget;
             const parentGrid = currentButton.parentElement;
