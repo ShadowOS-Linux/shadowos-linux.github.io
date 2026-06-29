@@ -168,10 +168,13 @@ h2 {
 /* Features Layout & Cards */
 .features-section {
     margin-bottom: 2.5rem;
+    width: 100%;
+    max-width: 1200px;
+    align-self: center;
 }
 
 .feature-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
 }
 
 @media (min-width: 900px) {
