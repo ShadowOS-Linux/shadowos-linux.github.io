@@ -2,6 +2,7 @@
     --bg-color: #0d1117;
     --card-bg: #161b22;
     --accent: #58a6ff;
+    --feature-accent: #388bfd; /* Distinct, punchier blue for the informational feature cards */
     --text: #c9d1d9;
     --text-muted: #8b949e;
     --border-color: #30363d;
@@ -42,6 +43,13 @@ h2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 1rem;
+}
+
+/* Forces the interactive installer options into a clean row profile */
+.selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
 }
 
 /* Option Cards */
@@ -197,9 +205,9 @@ h2 {
 }
 
 .feature-card {
-    background-color: #1f2937;
-    border: 1px solid var(--accent);
-    box-shadow: 0 0 0 1px var(--accent);
+    background-color: #121820; /* Slightly darker shift for visual contrast */
+    border: 1px solid var(--feature-accent);
+    box-shadow: 0 0 0 1px var(--feature-accent);
     border-radius: 6px;
     padding: 1.25rem;
     text-align: left;
