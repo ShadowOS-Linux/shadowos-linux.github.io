@@ -121,7 +121,11 @@ function evaluateShadowPipeline() {
                 buildFilenameText.textContent = "Fetching build tracking metrics from GitHub index...";
                 buildFilenameText.style.color = "var(--accent)";
             }
-            if (downloadBtn) downloadBtn.removeAttribute('href');
+            if (downloadBtn) {
+                downloadBtn.removeAttribute('href');
+                downloadBtn.style.pointerEvents = "none";
+                downloadBtn.style.opacity = "0.5";
+            }
             if (finalDownload) finalDownload.classList.add('visible');
             return;
         }
@@ -135,13 +139,19 @@ function evaluateShadowPipeline() {
             }
             if (downloadBtn) {
                 downloadBtn.href = `https://nightly.link/${owner}/${repo}/suites/${runtimeState.liveData.suiteId}/artifacts/${matchedArtifact.id}`;
+                downloadBtn.style.pointerEvents = "auto";
+                downloadBtn.style.opacity = "1";
             }
         } else {
             if (buildFilenameText) {
                 buildFilenameText.textContent = "Selected configuration variant not found in this build run.";
                 buildFilenameText.style.color = "#ff6b6b";
             }
-            if (downloadBtn) downloadBtn.removeAttribute('href');
+            if (downloadBtn) {
+                downloadBtn.removeAttribute('href');
+                downloadBtn.style.pointerEvents = "none";
+                downloadBtn.style.opacity = "0.5";
+            }
         }
 
         if (finalDownload) finalDownload.classList.add('visible');
