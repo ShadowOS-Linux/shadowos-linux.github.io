@@ -147,12 +147,12 @@ h2 {
     margin-bottom: 1rem;
 }
 
-.brand-header h1 {
-    font-size: 2.6rem;
-    font-weight: 800;
-    color: #f0f6fc;
-    margin: 0;
-    letter-spacing: -0.5px;
+/* Scales the header logo dynamically up to a prominent hero presentation */
+.brand-logo.hero-logo {
+    height: 160px;
+    max-height: 35vh; 
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .brand-subtitle {
