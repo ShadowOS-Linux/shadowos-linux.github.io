@@ -103,8 +103,6 @@ function evaluateShadowPipeline() {
     const stepGpu = document.getElementById('step-gpu');
     const stepSteam = document.getElementById('step-steam');
     const finalDownload = document.getElementById('final-download');
-    const buildStringText = document.getElementById('configuration-string');
-    const buildFilenameText = document.getElementById('build-filename');
     const downloadBtn = document.querySelector('.download-btn');
 
     if (runtimeState.de !== null && stepGpu) stepGpu.classList.add('visible');
@@ -113,18 +111,12 @@ function evaluateShadowPipeline() {
     if (runtimeState.de !== null && runtimeState.gpu !== null && runtimeState.steam !== null) {
         const { owner, repo } = SHADOW_CONFIG.github;
         const variantTarget = `shadowos-${runtimeState.de}${runtimeState.gpu}${runtimeState.steam}`;
-        
-        if (buildStringText) buildStringText.textContent = `VARIANT="${variantTarget}"`;
 
         if (!runtimeState.liveData.suiteId || Object.keys(runtimeState.liveData.artifacts).length === 0) {
-            if (buildFilenameText) {
-                buildFilenameText.textContent = "Fetching build tracking metrics from GitHub index...";
-                buildFilenameText.style.color = "var(--accent)";
-            }
             if (downloadBtn) {
                 downloadBtn.removeAttribute('href');
                 downloadBtn.style.pointerEvents = "none";
-                downloadBtn.style.opacity = "0.5";
+                downloadBtn.style.opacity = "0.4";
             }
             if (finalDownload) finalDownload.classList.add('visible');
             return;
@@ -133,24 +125,16 @@ function evaluateShadowPipeline() {
         const matchedArtifact = runtimeState.liveData.artifacts[variantTarget];
 
         if (matchedArtifact) {
-            if (buildFilenameText) {
-                buildFilenameText.textContent = matchedArtifact.name;
-                buildFilenameText.style.color = "#f0f6fc";
-            }
             if (downloadBtn) {
                 downloadBtn.href = `https://nightly.link/${owner}/${repo}/suites/${runtimeState.liveData.suiteId}/artifacts/${matchedArtifact.id}`;
                 downloadBtn.style.pointerEvents = "auto";
                 downloadBtn.style.opacity = "1";
             }
         } else {
-            if (buildFilenameText) {
-                buildFilenameText.textContent = "Selected configuration variant not found in this build run.";
-                buildFilenameText.style.color = "#ff6b6b";
-            }
             if (downloadBtn) {
                 downloadBtn.removeAttribute('href');
                 downloadBtn.style.pointerEvents = "none";
-                downloadBtn.style.opacity = "0.5";
+                downloadBtn.style.opacity = "0.15";
             }
         }
 
