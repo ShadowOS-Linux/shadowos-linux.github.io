@@ -98,7 +98,7 @@ function evaluateShadowPipeline() {
     const stepGpu = document.getElementById('step-gpu');
     const stepSteam = document.getElementById('step-steam');
     const finalDownload = document.getElementById('final-download');
-    const downloadBtn = document.querySelector('.download-btn');
+    const downloadBtn = document.querySelector('.dynamic-download-trigger');
 
     if (runtimeState.de !== null && stepGpu) stepGpu.classList.add('visible');
     if (runtimeState.de !== null && runtimeState.gpu !== null && stepSteam) stepSteam.classList.add('visible');
