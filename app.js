@@ -91,11 +91,6 @@ async function fetchLatestArtifacts() {
 
     } catch (error) {
         console.error("Failed to sync remote artifact tree:", error);
-        const buildFilenameText = document.getElementById('build-filename');
-        if (buildFilenameText) {
-            buildFilenameText.textContent = "Error parsing real-time build names. Please refresh.";
-            buildFilenameText.style.color = "#ff6b6b";
-        }
     }
 }
 
