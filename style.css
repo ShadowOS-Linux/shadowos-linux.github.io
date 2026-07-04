@@ -57,11 +57,13 @@ h2 {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    padding: 1.25rem;
+    padding: 1rem; /* Marginally adjusted to let image layouts breathe */
     color: var(--text);
     cursor: pointer;
     text-align: left;
     transition: border-color 0.2s, transform 0.2s, background-color 0.2s;
+    display: flex;
+    flex-direction: column;
 }
 
 .option-btn:hover {
@@ -73,6 +75,26 @@ h2 {
     border-color: var(--accent);
     background-color: #1f2937;
     box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* Screenshot Preview Image Layout Rule */
+.btn-preview-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.85rem;
+    transition: border-color 0.2s ease;
+}
+
+.option-btn:hover .btn-preview-img {
+    border-color: #8b949e;
+}
+
+.option-btn.active .btn-preview-img {
+    border-color: var(--accent);
 }
 
 .option-btn h3 {
