@@ -267,3 +267,13 @@ h2 {
     color: #f0f6fc;
     font-size: 0.8rem;
 }
+
+/* Footer Link Enhancements */
+footer a {
+    display: inline-block;
+}
+
+footer a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
