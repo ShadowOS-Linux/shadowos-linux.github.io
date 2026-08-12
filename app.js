@@ -10,6 +10,7 @@ const runtimeState = {
     de: null,
     gpu: null,
     steam: null,
+    channel: "",
     liveData: {
         suiteId: null,
         artifacts: {}
@@ -21,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLatestArtifacts();
 });
 
-// Binds layout options and interaction hooks to the engine state
 function initializeUIEventListeners() {
     document.querySelectorAll('.selector-grid button').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -36,15 +36,13 @@ function initializeUIEventListeners() {
             if (matrixStep === 'de') runtimeState.de = elementValue;
             if (matrixStep === 'gpu') runtimeState.gpu = elementValue;
             if (matrixStep === 'steam') runtimeState.steam = elementValue;
+            if (matrixStep === 'channel') runtimeState.channel = elementValue;
 
             evaluateShadowPipeline();
         });
     });
 }
 
-/**
- * Queries GitHub's Workflow and Artifact endpoints to resolve suite and artifact indices
- */
 async function fetchLatestArtifacts() {
     const { owner, repo, workflowFile } = SHADOW_CONFIG.github;
     const runUrl = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/runs?status=success&per_page=1`;
@@ -76,9 +74,9 @@ async function fetchLatestArtifacts() {
             const fileName = item.name;
             const internalArtifactId = item.id.toString();
             
-            const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?)-f\d+/);
+            const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?-beta|shadowos-[a-z-]+?)-f\d+/);
             if (prefixMatch) {
-                const variantKey = prefixMatch[1];
+                let variantKey = prefixMatch[1];
                 runtimeState.liveData.artifacts[variantKey] = {
                     name: fileName,
                     id: internalArtifactId
@@ -97,15 +95,17 @@ async function fetchLatestArtifacts() {
 function evaluateShadowPipeline() {
     const stepGpu = document.getElementById('step-gpu');
     const stepSteam = document.getElementById('step-steam');
+    const stepChannel = document.getElementById('step-channel');
     const finalDownload = document.getElementById('final-download');
     const downloadBtn = document.querySelector('.dynamic-download-trigger');
 
     if (runtimeState.de !== null && stepGpu) stepGpu.classList.add('visible');
     if (runtimeState.de !== null && runtimeState.gpu !== null && stepSteam) stepSteam.classList.add('visible');
+    if (runtimeState.de !== null && runtimeState.gpu !== null && runtimeState.steam !== null && stepChannel) stepChannel.classList.add('visible');
 
     if (runtimeState.de !== null && runtimeState.gpu !== null && runtimeState.steam !== null) {
         const { owner, repo } = SHADOW_CONFIG.github;
-        const variantTarget = `shadowos-${runtimeState.de}${runtimeState.gpu}${runtimeState.steam}`;
+        const variantTarget = `shadowos-${runtimeState.de}${runtimeState.gpu}${runtimeState.steam}${runtimeState.channel}`;
 
         if (!runtimeState.liveData.suiteId || Object.keys(runtimeState.liveData.artifacts).length === 0) {
             if (downloadBtn) {
