@@ -74,7 +74,7 @@ async function fetchLatestArtifacts() {
             const fileName = item.name;
             const internalArtifactId = item.id.toString();
             
-            const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?-beta|shadowos-[a-z-]+?)-f\d+/);
+            const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?(?:-beta)?)-f\d+/);
             if (prefixMatch) {
                 let variantKey = prefixMatch[1];
                 runtimeState.liveData.artifacts[variantKey] = {
