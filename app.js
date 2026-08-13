@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initializeUIEventListeners() {
     document.querySelectorAll(".selector-grid button").forEach(button => {
-        button.addEventListener("click", (e) => {
+        button.addEventListener("click", e => {
             const currentButton = e.currentTarget;
             const parentGrid = currentButton.parentElement;
             const matrixStep = parentGrid.getAttribute("data-step");
@@ -85,7 +85,7 @@ async function fetchLatestArtifacts() {
             latestRun.check_suite_id.toString();
 
         const artifactsUrl =
-            `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/artifacts`;
+            `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/artifacts?per_page=100`;
 
         const artifactResponse = await fetch(artifactsUrl);
 
@@ -107,7 +107,9 @@ async function fetchLatestArtifacts() {
             const fileName = item.name;
             const internalArtifactId = item.id.toString();
 
-            const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?)-f\d+/);
+            const prefixMatch = fileName.match(
+                /^(shadowos-[a-z-]+?)-f\d+/
+            );
 
             if (prefixMatch) {
                 const variantKey = prefixMatch[1];
@@ -121,6 +123,10 @@ async function fetchLatestArtifacts() {
 
         console.log(
             `Pipeline Indexed! Suite ID: ${runtimeState.liveData.suiteId}`
+        );
+
+        console.log(
+            `Indexed ${Object.keys(runtimeState.liveData.artifacts).length} artifacts.`
         );
 
         console.log(
