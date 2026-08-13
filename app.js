@@ -10,7 +10,7 @@ const runtimeState = {
     de: null,
     gpu: null,
     steam: null,
-    channel: null,
+    channel: "",
     liveData: {
         suiteId: null,
         artifacts: {}
