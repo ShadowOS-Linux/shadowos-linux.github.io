@@ -74,9 +74,9 @@ async function fetchLatestArtifacts() {
             const fileName = item.name;
             const internalArtifactId = item.id.toString();
             
-            const parts = fileName.split(/-f\d+/);
-            if (parts.length > 0 && parts[0].startsWith('shadowos-')) {
-                const variantKey = parts[0];
+            const prefixMatch = fileName.match(/^(shadowos-[a-z-]+?)-f\d+/);
+            if (prefixMatch) {
+                const variantKey = prefixMatch[1];
                 runtimeState.liveData.artifacts[variantKey] = {
                     name: fileName,
                     id: internalArtifactId
@@ -105,7 +105,6 @@ function evaluateShadowPipeline() {
 
     if (runtimeState.de !== null && runtimeState.gpu !== null && runtimeState.steam !== null && runtimeState.channel !== null) {
         const { owner, repo } = SHADOW_CONFIG.github;
-        
         const variantTarget = `shadowos-${runtimeState.de}${runtimeState.gpu}${runtimeState.steam}${runtimeState.channel}`;
 
         if (!runtimeState.liveData.suiteId || Object.keys(runtimeState.liveData.artifacts).length === 0) {
